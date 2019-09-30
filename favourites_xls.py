@@ -44,22 +44,27 @@ def favourites_xls(opt):
     ws = wb.add_sheet('0')
 
     # Column widths
-    ws.col(0).width = 256 * 30
-    ws.col(1).width = 256 * 30
-    ws.col(2).width = 256 * 60
-    ws.col(3).width = 256 * 30
-    ws.col(4).width = 256 * 30
+    ws.col(0).width = 256 * 20
+    ws.col(1).width = 256 * 20
+    ws.col(2).width = 256 * 30
+    ws.col(3).width = 256 * 10
+    ws.col(4).width = 256 * 10
+    ws.col(5).width = 256 * 10
+    ws.col(6).width = 256 * 10
 
     # Stylez
-    style_link = easyxf('font: underline single, name Arial, height 220, colour_index blue')
-    style_heading = easyxf('font: bold 1, name Arial, height 220; pattern: pattern solid, pattern_fore_colour yellow, pattern_back_colour yellow')
-    style_wrap = easyxf('align: wrap 1; font: height 220')
+    style_link = easyxf('font: underline single, name Arial, height 160, colour_index blue')
+    style_heading = easyxf('font: bold 1, name Arial, height 160; pattern: pattern solid, pattern_fore_colour yellow, pattern_back_colour yellow')
+    style_wrap = easyxf('align: wrap 1; font: height 160')
 
     # Headings in proper MBA spreadsheet style - Bold with yellow background
     ws.write(0, 0, 'Author', style_heading)
     ws.write(0, 1, 'Twitter Handle', style_heading)
     ws.write(0, 2, 'Text', style_heading)
-    ws.write(0, 3, 'Embedded Links', style_heading)
+    ws.write(0, 3, 'Profile Pic', style_heading)
+    ws.write(0, 4, 'Profile Banner', style_heading)
+    ws.write(0, 5, 'Embedded Links 1', style_heading)
+    ws.write(0, 6, 'Embedded Links 2', style_heading)
 
     # Let's start at page 1 of your favourites because you know, it's a very
     # good place to start
@@ -79,20 +84,32 @@ def favourites_xls(opt):
         # Programmers have been doing inception for ages before Nolan did. Let's go deeper and get
         # into another loop now
         for fav in faves:
-            
-            ws.write(count, 0, fav['user']['name'],style_wrap)
-            ws.write(count, 1, fav['user']['screen_name'],style_wrap)
+            user = fav['user']
+            ws.write(count, 0, user['name'],style_wrap)
+            ws.write(count, 1, user['screen_name'],style_wrap)
             ws.write(count, 2, fav['text'],style_wrap)
+
+            if ('profile_image_url_https' in user):
+                formattedLink = 'HYPERLINK("%s";"%s")' % (user['profile_image_url_https'],"DP")
+                ws.write(count, 3, Formula(formattedLink), style_link)
+
+            if ('profile_banner_url' in user):
+                formattedLink = 'HYPERLINK("%s";"%s")' % (user['profile_banner_url'],"BNR")
+                ws.write(count, 4, Formula(formattedLink), style_link)
+
+            
             links = fav['entities']['urls']
             i = 0
+            
             for link in links:
                 formatted_link = 'HYPERLINK("%s";"%s")' % (link['url'],"link")
-                ws.write(count, 3+i, Formula(formatted_link), style_link)
+                ws.write(count, 5 + i, Formula(formatted_link), style_link)
                 i += 1
-                formatted_ExpandedLink = 'HYPERLINK("%s";"%s")' % (link['expanded_url'],"expanded_link")
-                ws.write(count, 3+i, Formula(formatted_ExpandedLink), style_link)
+                formattedExpandedLink = 'HYPERLINK("%s";"%s")' % (link['expanded_url'],"expanded_link")
+                ws.write(count, 5 + i, Formula(formattedExpandedLink), style_link)
                 i += 1
 
+            
             count += 1
             #print 'At count: [%d%%]\r'%count,
             sys.stderr.write('\rPG:%d,CNT:%d'%(pagenum, count))
