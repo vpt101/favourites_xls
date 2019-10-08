@@ -16,7 +16,7 @@ MAGENTA='\033[1;35m'
 GREY='\033[1;30m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
-
+MAX_FIB=233
 
 # Uncomment these lines and fill in your details before running
 access_token_key = '23733847-vL377cLdwxIOWuge9GIpYN7Kg5qUqF1OoLDhyr7aZ'
@@ -224,7 +224,7 @@ def favourites_xls(opt):
                     sys.stderr.write('\rPG:%d,CNT:%d'%(pagenum, count))
                     cw.writerow(row);
                     dbRow=(row["Id"], row["Date"], row["RtCnt"], row["FavCnt"], row["ProbSensitive"], row["Name"], row["Handle"], row["Text"], row["DP"], row["Banner"], row["Links"], row["OtherLinks"])
-                    if (maxId > int(row["Id"])):
+                    if (maxId < int(row["Id"])):
                         rows.append(dbRow);
 
 
@@ -236,10 +236,12 @@ def favourites_xls(opt):
                     conn.close();
                 except sqlite3.OperationalError as oe: 
                     sys.stderr.write(RED)
-                    sys.stderr.write("ERROR! %s" % oe)
+                    sys.stderr.write("\nERROR! %s\n" % oe)
                     sys.stderr.write('\n')
                     conn.close();
-                except sqlite3.IntegrityError:
+                except sqlite3.IntegrityError as ie:
+                    sys.stderr.write(RED)
+                    sys.stderr.write("\nERROR! %s\n" % ie)
                     conn.close();
                     
                 pagenum += 1
@@ -250,7 +252,7 @@ def favourites_xls(opt):
                 secs = fib0;
                     
                 time.sleep(secs)
-                if (fib0 >= 1597):
+                if (fib0 >= MAX_FIB):
                     resetFib();
             
             except TwythonRateLimitError as trle:
@@ -264,7 +266,7 @@ def favourites_xls(opt):
                     print("\n Sleeping for: %s seconds" % waitTime);
                     time.sleep(waitTime)
                 else:
-                    print("Something weird happend: %s" % trle);
+                    print("Something weird happened: %s" % trle);
         
     # conn.close();
     # Now for the step that has caused untold misery and suffering to people who forget to do it at work
