@@ -8,6 +8,8 @@ import re
 import csv
 import sqlite3
 
+from tok import access_token_key, access_token_secret, consumer_key, consumer_secret
+
 RED='\033[1;31m'
 BLUE='\033[1;34m'
 GREEN='\033[1;32m'
@@ -17,12 +19,6 @@ GREY='\033[1;30m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 MAX_FIB=233
-
-# Uncomment these lines and fill in your details before running
-access_token_key = '23733847-vL377cLdwxIOWuge9GIpYN7Kg5qUqF1OoLDhyr7aZ'
-access_token_secret = 'pKPYzK5xvV1qVW4lQQ6G0UeFnapflDjvf7nzcq34iypYb'
-consumer_key = 'hE1FtTwq8Ig2m9fTSzHWUHkTi'
-consumer_secret = 'rPVUeVu23dEX2meHi4pwO6frjhFxPX3lZFnXiNrFqM7XZhqe19'
 
 rangeRegex = re.compile('[1-9]*(:?[0-9]+)')
 

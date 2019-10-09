@@ -1,3 +1,6 @@
 .ropeproject
 twitter_favourites.xls
 twitter_favourites.txt
+tok.py
+__pycache__
+.spyproject
